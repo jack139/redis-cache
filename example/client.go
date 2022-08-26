@@ -22,7 +22,7 @@ func main() {
 
 	// Create a pool with the server certificate since it is not signed
 	// by a known CA
-	caCert, err := ioutil.ReadFile("server.crt")
+	caCert, err := ioutil.ReadFile("../cert/server.crt")
 	if err != nil {
 		log.Fatalf("Reading server certificate: %s", err)
 	}

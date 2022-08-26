@@ -1,18 +1,27 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"log"
+	"flag"
 
 	"github.com/valyala/fasthttp"
 	"github.com/dgrr/http2"
 	"github.com/fasthttp/router"
+
+	"redis-cache/helper"
 )
 
 // openssl req -newkey rsa:2048 -nodes -keyout server.key -x509 -days 3650 -out server.crt -addext "subjectAltName = DNS:localhost"
 
 
+var configPath = flag.String("config", "config/settings.yaml", "YAML config file path")
+
+
 func main() {
+	// 初始化
+	helper.InitSettings(*configPath)
+
 	r := router.New()
 	r.GET("/", index)
 
@@ -21,12 +30,15 @@ func main() {
         Name:    "HTTP2 test",
     }
 
-	host := fmt.Sprintf("%s:%d", "", 8443)
-	log.Printf("start HTTP server at %s\n", host)
+	log.Printf("start HTTP server at %s\n", helper.Settings.Server.HTTP2_LISTEN)
 
     http2.ConfigureServer(s, http2.ServerConfig{})
     
-    log.Fatal(s.ListenAndServeTLS(host, "server.crt", "server.key"))
+    log.Fatal(s.ListenAndServeTLS(
+    	helper.Settings.Server.HTTP2_LISTEN, 
+    	helper.Settings.Server.SSL_CERT_PATH + "/server.crt", 
+    	helper.Settings.Server.SSL_CERT_PATH + "/server.key",
+    ))
 }
 
 func index(ctx *fasthttp.RequestCtx) {
