@@ -9,7 +9,8 @@ import (
 	"github.com/fasthttp/router"
 )
 
-// openssl req -newkey rsa:2048 -nodes -keyout server.key -x509 -days 365 -out server.crt
+// openssl req -newkey rsa:2048 -nodes -keyout server.key -x509 -days 3650 -out server.crt -addext "subjectAltName = DNS:localhost"
+
 
 func main() {
 	r := router.New()
