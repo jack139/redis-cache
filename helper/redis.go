@@ -39,24 +39,22 @@ func Redis_shoot(key string) (string, error) {
 			return "", err
 		}
 
-		log.Println("redis shot:", key, value)
+		log.Println("redis shot:", key)
 		return value, nil
 	}
 
 	// 锁
 	locker := redislock.New(rdb)
 
-	// Retry every 100ms, for up-to 3x
+	// 取锁失败 每100ms 重试3次
 	backoff := redislock.LimitRetry(redislock.LinearBackoff(100*time.Millisecond), 3)
-
-	// Obtain lock with retry
-	lock, err := locker.Obtain(ctx, key, 1*time.Second, &redislock.Options{
+	// 取锁
+	lock, err := locker.Obtain(ctx, key, 2*time.Second, &redislock.Options{
 		RetryStrategy: backoff,
 	})
 	if err == redislock.ErrNotObtained {
 		// 未取得 lock，用db数据返回
 		log.Println("ErrNotObtained shot:", key)
-
 		return Mssql_shoot(key) 
 	} else if err != nil {
 		return "", err
@@ -75,7 +73,7 @@ func Redis_shoot(key string) (string, error) {
 		return "", err
 	} else if ttl == 0 {
 		// 锁已失效，直接返回数据
-		log.Println("Lock expired:", key, value)
+		log.Println("Lock expired:", key)
 
 		return value, nil
 	}
@@ -86,7 +84,7 @@ func Redis_shoot(key string) (string, error) {
 		return "", err
 	}
 
-	log.Println("Update redis:", key, value)
+	log.Println("Update redis:", key)
 
 	return value, nil
 }

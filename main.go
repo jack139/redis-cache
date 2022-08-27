@@ -7,6 +7,7 @@ import (
 	"redis-cache/http"
 )
 
+// 生成证书，注意 DNS的设置
 // openssl req -newkey rsa:2048 -nodes -keyout server.key -x509 -days 3650 -out server.crt -addext "subjectAltName = DNS:localhost"
 
 

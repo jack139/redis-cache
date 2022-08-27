@@ -26,7 +26,7 @@ func mssql_init() error {
 }
 
 
-func Mssql_shoot(key string) (string,  error) {
+func Mssql_shoot(key string) (string, error) {
 	stmt, err := conn_mssql.Prepare("select name from master.dbo.sysdatabases WHERE name LIKE :1")
 	if err!=nil {
 		return "", fmt.Errorf("Failed Prepare: %s", err)

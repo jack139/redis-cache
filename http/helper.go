@@ -1,11 +1,10 @@
 package http
 
 import (
-	"encoding/json"
 	"log"
 	"time"
 	"os"
-
+	"encoding/json"
 	"github.com/valyala/fasthttp"
 	"github.com/ferluci/fast-realip"
 )
@@ -25,7 +24,6 @@ func respJson(ctx *fasthttp.RequestCtx, value string) {
 	respJson := map[string]interface{}{
 		"success": true,
 		"data": value,
-		"timestamp": time.Now().Unix(),
 	}
 	doJSONWrite(ctx, fasthttp.StatusOK, respJson)
 }
@@ -35,7 +33,6 @@ func respError(ctx *fasthttp.RequestCtx, msg string) {
 	respJson := map[string]interface{}{
 		"success": false,
 		"msg": msg,
-		"timestamp": time.Now().Unix(),
 	}
 	doJSONWrite(ctx, fasthttp.StatusOK, respJson)
 }

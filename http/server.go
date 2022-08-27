@@ -1,7 +1,7 @@
 package http
 
 import (
-	//"fmt"
+	"time"
 	"log"
 	"net/url"
 	"github.com/valyala/fasthttp"
@@ -19,20 +19,21 @@ func RunServer() {
 	r.GET("/", index)
 	r.POST("/redis/cache", shoot)
 
-    s := &fasthttp.Server{
-        Handler: combined(r.Handler),
-        Name:    "HTTP2 redis-cache",
-    }
+	s := &fasthttp.Server{
+		ReadTimeout: time.Second * 5,
+		Handler: combined(r.Handler),
+		Name:    "HTTP2 redis-cache",
+	}
 
 	log.Printf("start HTTP/2 server at %s\n", helper.Settings.Server.HTTP2_LISTEN)
 
-    http2.ConfigureServer(s, http2.ServerConfig{})
-    
-    log.Fatal(s.ListenAndServeTLS(
-    	helper.Settings.Server.HTTP2_LISTEN, 
-    	helper.Settings.Server.SSL_CERT_PATH + "/server.crt", 
-    	helper.Settings.Server.SSL_CERT_PATH + "/server.key",
-    ))
+	http2.ConfigureServer(s, http2.ServerConfig{})
+
+	log.Fatal(s.ListenAndServeTLS(
+		helper.Settings.Server.HTTP2_LISTEN,
+		helper.Settings.Server.SSL_CERT_PATH + "/server.crt",
+		helper.Settings.Server.SSL_CERT_PATH + "/server.key",
+	))
 }
 
 
@@ -45,7 +46,7 @@ func shoot(ctx *fasthttp.RequestCtx) {
 	// POST 的数据
 	content := ctx.PostBody()
 
-	log.Println(string(content))
+	//log.Println(string(content))
 
 	m, err := url.ParseQuery(string(content))
 	if err != nil {
@@ -64,8 +65,9 @@ func shoot(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	
-	doJSONWrite(ctx, fasthttp.StatusOK, v)
+	// 返回字符串
+	//doJSONWrite(ctx, fasthttp.StatusOK, v)
 
-	//respJson(ctx, v)
+	// 返回json
+	respJson(ctx, v)
 }

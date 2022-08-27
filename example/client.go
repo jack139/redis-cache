@@ -9,7 +9,6 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-
 	"golang.org/x/net/http2"
 )
 
