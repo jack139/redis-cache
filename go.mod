@@ -3,14 +3,15 @@ module redis-cache
 go 1.18
 
 require (
+	github.com/bsm/redislock v0.7.2
 	github.com/denisenkom/go-mssqldb v0.12.2
 	github.com/dgrr/http2 v0.3.5
 	github.com/fasthttp/router v1.4.11
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/sijms/go-ora/v2 v2.5.3
 	github.com/valyala/fasthttp v1.39.0
-	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
+	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (

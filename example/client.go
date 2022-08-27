@@ -12,7 +12,7 @@ import (
 	"golang.org/x/net/http2"
 )
 
-const url = "https://localhost:8443/"
+const url = "https://localhost:8443/get"
 
 var httpVersion = flag.Int("version", 2, "HTTP version")
 

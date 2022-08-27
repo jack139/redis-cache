@@ -35,6 +35,7 @@ func main() {
 
 	r := router.New()
 	r.GET("/", index)
+	r.GET("/get", shoot)
 
     s := &fasthttp.Server{
         Handler: r.Handler,
@@ -55,4 +56,14 @@ func main() {
 func index(ctx *fasthttp.RequestCtx) {
 	log.Printf("%v", ctx.RemoteAddr())
 	ctx.WriteString("Hello world.")
+}
+
+func shoot(ctx *fasthttp.RequestCtx) {
+	log.Printf("%v", ctx.RemoteAddr())
+	v, err := helper.Redis_shoot("123")
+	if err!=nil {
+		log.Println(err)
+		ctx.WriteString("!fail")
+	}
+	ctx.WriteString(v)
 }
