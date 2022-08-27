@@ -19,8 +19,19 @@ var configPath = flag.String("config", "config/settings.yaml", "YAML config file
 
 
 func main() {
+	flag.Parse()
+
 	// 初始化
 	helper.InitSettings(*configPath)
+
+
+	ret, err := helper.Mssql_test()
+	if err!=nil {
+		log.Fatal(err)
+	}
+
+	log.Println(ret)
+
 
 	r := router.New()
 	r.GET("/", index)

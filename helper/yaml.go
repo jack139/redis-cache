@@ -12,6 +12,7 @@ type serverYaml struct {
 	REDIS_SERVER string `yaml:"RedisServer"`
 	REDIS_PASSWD string `yaml:"RedisPasswd"`
 	ORA_CONNECTION string `yaml:"OraConnString"`
+	MSSQL_CONNECTION string `yaml:"MssqlConnString"`
 	SSL_CERT_PATH string `yaml:"SSLCertPath"`
 }
 
@@ -46,10 +47,18 @@ func InitSettings(yamlFilepath string){
 		log.Fatal("Redis connecting FAIL: ", err)
 	}
 
+	/*
 	// 初始化Ora连接, 
 	err = ora_init()
 	if err!=nil {
 		log.Fatal("Oracle connecting FAIL: ", err)
+	}
+	*/
+
+	// 初始化Mssql连接, 
+	err = mssql_init()
+	if err!=nil {
+		log.Fatal("MS-Sql connecting FAIL: ", err)
 	}
 
 }
