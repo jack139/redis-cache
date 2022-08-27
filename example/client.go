@@ -12,13 +12,23 @@ import (
 	"golang.org/x/net/http2"
 )
 
-const post_url = "https://localhost:8443/redis/cache"
+const (
+	post_url = "https://localhost:8443/redis/cache"
+	TOTAL = 2
+)
 
-var httpVersion = flag.Int("version", 2, "HTTP version")
-var httpKey = flag.String("key", "", "cache key")
+var (
+	httpVersion = flag.Int("version", 2, "HTTP version")
+	httpKey = flag.String("key", "", "cache key")
 
-func main() {
-	flag.Parse()
+	guard = make(chan struct{}, TOTAL)
+)
+
+func do_post(key string){
+	defer func(){ // 释放 锁
+		<-guard
+	}()
+
 	client := &http.Client{}
 
 	// Create a pool with the server certificate since it is not signed
@@ -48,7 +58,7 @@ func main() {
 	}
 
 	// Perform the request
-	resp, err := client.PostForm(post_url, url.Values{"key": {*httpKey}})
+	resp, err := client.PostForm(post_url, url.Values{"key": {key}})
 	if err != nil {
 		log.Fatalf("Failed POST: %s", err)
 	}
@@ -60,4 +70,18 @@ func main() {
 	fmt.Printf(
 		"Got response %d: %s %s\n",
 		resp.StatusCode, resp.Proto, string(body))
+}
+
+func main() {
+	flag.Parse()
+
+	for i:=0;i<TOTAL;i++ {
+		guard <- struct{}{}
+		go do_post(*httpKey)
+	}
+
+	// 都获取到才结束
+	for i:=0;i<TOTAL;i++ {
+		guard <- struct{}{}
+	}
 }
