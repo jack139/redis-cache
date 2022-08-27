@@ -14,14 +14,14 @@ import (
 
 const (
 	post_url = "https://localhost:8443/redis/cache"
-	TOTAL = 2
 )
 
 var (
 	httpVersion = flag.Int("version", 2, "HTTP version")
-	httpKey = flag.String("key", "", "cache key")
+	flagKey = flag.String("key", "", "cache key")
+	flagShoot = flag.Int("num", 1, "num of goroutine")
 
-	guard = make(chan struct{}, TOTAL)
+	guard chan struct{}
 )
 
 func do_post(key string){
@@ -75,13 +75,15 @@ func do_post(key string){
 func main() {
 	flag.Parse()
 
-	for i:=0;i<TOTAL;i++ {
+	guard = make(chan struct{}, *flagShoot)
+
+	for i:=0;i<*flagShoot;i++ {
 		guard <- struct{}{}
-		go do_post(*httpKey)
+		go do_post(*flagKey)
 	}
 
 	// 都获取到才结束
-	for i:=0;i<TOTAL;i++ {
+	for i:=0;i<*flagShoot;i++ {
 		guard <- struct{}{}
 	}
 }
