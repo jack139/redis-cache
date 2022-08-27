@@ -51,16 +51,21 @@ func Mssql_shoot(key string) (string,  error) {
 		sqlData = append(sqlData, item.String)
 	}
 
-	// json 返回
-	msgBody, err := json.Marshal(map[string]interface{}{
-		"key"   : key,
-		"value" : sqlData,
-	})
-	if err != nil {
-		return "", fmt.Errorf("Failed Json: %s", err)
+	var ret string
+	for _, v := range sqlData {
+		ret += v+" "
 	}
 
-	return string(msgBody), nil
+	return ret, nil
+
+	// json 返回
+	//msgBody, err := json.Marshal(map[string]interface{}{
+	//	"value" : sqlData,
+	//})
+	//if err != nil {
+	//	return "", fmt.Errorf("Failed Json: %s", err)
+	//}
+	//return string(msgBody), nil
 }
 
 

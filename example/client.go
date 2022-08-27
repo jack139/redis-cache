@@ -8,13 +8,15 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 
 	"golang.org/x/net/http2"
 )
 
-const url = "https://localhost:8443/get"
+const post_url = "https://localhost:8443/redis/cache"
 
 var httpVersion = flag.Int("version", 2, "HTTP version")
+var httpKey = flag.String("key", "", "cache key")
 
 func main() {
 	flag.Parse()
@@ -47,9 +49,9 @@ func main() {
 	}
 
 	// Perform the request
-	resp, err := client.Get(url)
+	resp, err := client.PostForm(post_url, url.Values{"key": {*httpKey}})
 	if err != nil {
-		log.Fatalf("Failed get: %s", err)
+		log.Fatalf("Failed POST: %s", err)
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)

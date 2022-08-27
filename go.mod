@@ -7,6 +7,7 @@ require (
 	github.com/denisenkom/go-mssqldb v0.12.2
 	github.com/dgrr/http2 v0.3.5
 	github.com/fasthttp/router v1.4.11
+	github.com/ferluci/fast-realip v1.0.1
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/sijms/go-ora/v2 v2.5.3
 	github.com/valyala/fasthttp v1.39.0
