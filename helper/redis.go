@@ -50,7 +50,7 @@ func Redis_shoot(key string) (string, error) {
 	// 锁
 	locker := redislock.New(rdb)
 
-	// 取锁失败时 每50ms 重试2次
+	// 取锁失败时 每50ms 重试1次
 	backoff := redislock.LimitRetry(redislock.LinearBackoff(50*time.Millisecond), 1)
 	// 取锁， 锁超时 2秒
 	lock, err := locker.Obtain(ctx, lock_key, 2*time.Second, &redislock.Options{
